@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rent A Car</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #4267B2;
+            color: #fff;
+            padding: 20px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        h3 {
+            margin: 0;
+            margin-left: 20px;
+        }
+
+        h3 a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .search-bar button {
+            padding: 10px 15px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .cart-btn {
+            text-decoration: none;
+            color: #4267B2;
+            font-size: 24px;
+            margin-left: 20px;
+        }
+
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .product-card {
+            width: calc(25% - 20px);
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .product-card h3 {
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .product-card p {
+            margin: 5px 0;
+            color: #888;
+        }
+
+        .rent-btn {
+            padding: 10px 15px;
+            background-color: #4267B2;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Car Rental </h1>
+        {% if request.user.is_authenticated %}
+        <h3>Welcome, {{ request.user }} <a href="{% url 'signout' %}">Logout</a></h3>
+        {% endif %}
+    </header>
+
+    <div class="container">
+        <div class="search-bar">
+            <form action="" method="GET">
+                <input type="text" name="q" placeholder="Search for a car" value="{{ search_query }}">
+                <button type="submit">Search</button>
+            </form>
+            <a href="{% url 'cart' %}" class="cart-btn"><i class="fa fa-shopping-cart"></i></a>
+        </div>
+
+        <div class="product-container">
+            {% if cars %}
+                {% for car in cars %}
+                    <div class="product-card">
+                        <img src="{{ car.image.url }}" alt="{{ car.model }}">
+                        <h3>{{ car.model }}</h3>
+                        <p>Price per hour: ${{ car.price_per_hour }}</p>
+                        <a href="{% url 'add_to_cart' pk=car.pk %}" class="rent-btn">Rent It</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No cars found.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>
